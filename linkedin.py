@@ -2,6 +2,8 @@ from selenium import webdriver
 from selenium.common import NoSuchElementException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as ec
 import time
 
 chrome_options = webdriver.ChromeOptions()
@@ -61,3 +63,22 @@ def search_jobs(**kwargs):
         print("Some elements were not found:", e)
     except Exception as e:
         print("An error occurred:", e)
+
+
+def get_job_ids():
+    job_ids = []
+    try:
+        job_listings = WebDriverWait(driver, 10).until(
+            ec.presence_of_element_located((By.CLASS_NAME, 'scaffold-layout__list-container'))
+        )
+        job_items = job_listings.find_elements(By.TAG_NAME, 'li')
+        for job_item in job_items:
+            job_id = job_item.get_attribute('data-occludable-job-id')
+            if job_id is not None:
+                job_ids.append(int(job_id))
+    except NoSuchElementException as e:
+        print("Some elements were not found:", e)
+    except Exception as e:
+        print("An error occurred:", e)
+    return job_ids
+
