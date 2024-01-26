@@ -1,5 +1,5 @@
 from selenium import webdriver
-from selenium.common import NoSuchElementException, WebDriverException
+from selenium.common import NoSuchElementException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 import time
@@ -23,6 +23,9 @@ def login():
         driver.find_element(By.ID, "session_key").send_keys(email_phone)
         driver.find_element(By.ID, "session_password").send_keys(password)
         driver.find_element(By.XPATH, "/html/body/main/section[1]/div/div/form/div[2]/button").click()
+        time.sleep(5)
+        while driver.current_url != "https://www.linkedin.com/feed/?trk=homepage-basic_sign-in-submit":
+            time.sleep(1)
     except NoSuchElementException as e:
         print("Some elements were not found:", e)
     except Exception as e:
@@ -43,17 +46,14 @@ def search_jobs(**kwargs):
         search_bar.send_keys(Keys.ENTER)
         time.sleep(5)
         if kwargs["remote"]:
-            setting_button = driver.find_element(By.XPATH, '//*[@id="searchFilter_workplaceType"]')
-            setting_button.click()
+            driver.find_element(By.XPATH, '//*[@id="searchFilter_workplaceType"]').click()
             time.sleep(1)
-            remote_check = driver.find_element(By.XPATH, "//span[text()='Remote']")
-            remote_check.click()
-            results_button = driver.find_element(By.XPATH, '/html/body/div[4]/div[3]/div[4]/section/div/section/div/div/div/ul/li[7]/div/div/div/div[1]/div/form/fieldset/div[2]/button[2]/span')
-            results_button.click()
+            driver.find_element(By.XPATH, "//span[text()='Remote']").click()
+            time.sleep(1)
+            driver.find_element(By.XPATH, '/html/body/div[4]/div[3]/div[4]/section/div/section/div/div/div/ul/li[7]/div/div/div/div[1]/div/form/fieldset/div[2]/button[2]/span').click()
             time.sleep(1)
         if kwargs["easy_apply"]:
-            easy_apply_button = driver.find_element(By.XPATH, '/html/body/div[4]/div[3]/div[4]/section/div/section/div/div/div/ul/li[8]/div/button')
-            easy_apply_button.click()
+            driver.find_element(By.XPATH, '/html/body/div[4]/div[3]/div[4]/section/div/section/div/div/div/ul/li[8]/div/button').click()
             time.sleep(1)
         print(f'Searching for jobs using the keyword {kwargs["search_key"]}.')
         return True
@@ -61,5 +61,3 @@ def search_jobs(**kwargs):
         print("Some elements were not found:", e)
     except Exception as e:
         print("An error occurred:", e)
-
-
