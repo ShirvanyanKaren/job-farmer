@@ -2,7 +2,6 @@ from linkedin import *
 
 
 def init(**kwargs):
-    job_ids = []
     try:
         login()
         search_jobs(**kwargs)

@@ -4,6 +4,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
+from fs_operations import write_to_file
 import time
 
 chrome_options = webdriver.ChromeOptions()
@@ -32,6 +33,7 @@ def login():
         print("Some elements were not found:", e)
     except Exception as e:
         print("An error occurred:", e)
+
     if driver.current_url == "https://www.linkedin.com/feed/?trk=homepage-basic_sign-in-submit":
         print(f'Successfully logged into LinkedIn.com using the account associated with: {email_phone}')
         return True
@@ -43,7 +45,8 @@ def search_jobs(**kwargs):
     try:
         driver.get("https://www.linkedin.com/jobs/")
         time.sleep(5)
-        search_bar = driver.find_element(By.XPATH, "/html/body/div[4]/header/div/div/div/div[2]/div[2]/div/div/input[1]")
+        search_bar = driver.find_element(By.XPATH,
+                                         "/html/body/div[4]/header/div/div/div/div[2]/div[2]/div/div/input[1]")
         search_bar.send_keys(kwargs["search_key"])
         search_bar.send_keys(Keys.ENTER)
         time.sleep(5)
@@ -52,10 +55,12 @@ def search_jobs(**kwargs):
             time.sleep(1)
             driver.find_element(By.XPATH, "//span[text()='Remote']").click()
             time.sleep(1)
-            driver.find_element(By.XPATH, '/html/body/div[4]/div[3]/div[4]/section/div/section/div/div/div/ul/li[7]/div/div/div/div[1]/div/form/fieldset/div[2]/button[2]/span').click()
+            driver.find_element(By.XPATH,
+                                '/html/body/div[4]/div[3]/div[4]/section/div/section/div/div/div/ul/li[7]/div/div/div/div[1]/div/form/fieldset/div[2]/button[2]/span').click()
             time.sleep(1)
         if kwargs["easy_apply"]:
-            driver.find_element(By.XPATH, '/html/body/div[4]/div[3]/div[4]/section/div/section/div/div/div/ul/li[8]/div/button').click()
+            driver.find_element(By.XPATH,
+                                '/html/body/div[4]/div[3]/div[4]/section/div/section/div/div/div/ul/li[8]/div/button').click()
             time.sleep(1)
         print(f'Searching for jobs using the keyword {kwargs["search_key"]}.')
         return True
@@ -80,5 +85,5 @@ def get_job_ids():
         print("Some elements were not found:", e)
     except Exception as e:
         print("An error occurred:", e)
+    write_to_file(job_ids, 'job_ids.txt')
     return job_ids
-
