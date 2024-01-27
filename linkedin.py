@@ -4,7 +4,8 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
-from fs_operations import write_to_file
+from urllib.parse import urlparse, parse_qs, urlencode, urlunparse
+from fs_operations import write_to_file, read_from_file
 import time
 
 chrome_options = webdriver.ChromeOptions()
@@ -87,3 +88,49 @@ def get_job_ids():
         print("An error occurred:", e)
     write_to_file(job_ids, 'job_ids.txt')
     return job_ids
+
+
+def parse_url():
+    url = urlparse(driver.current_url)
+    query_params = parse_qs(url.query)
+
+    if 'start' in query_params:
+        del query_params['start']
+
+    new_query_string = urlencode(query_params, doseq=True)
+
+    return urlunparse((url.scheme, url.netloc, url.path, url.params, new_query_string, url.fragment))
+
+
+class EndOfJobs(Exception):
+    def __init__(self, message="End of job list"):
+        self.message = message
+        super().__init__(self.message)
+
+
+def get_next_url():
+    current_list = read_from_file("job_ids.txt")
+    if len(current_list) % 25 == 0:
+        parsed_url = parse_url() + '&start=' + str(len(current_list) + 25)
+        return parsed_url
+    else:
+        raise EndOfJobs()
+
+
+def save_jobs():
+    running = True
+    while running:
+        try:
+            element = WebDriverWait(driver, 10).until(ec.presence_of_element_located(
+                (By.CLASS_NAME, 'scaffold-layout__list-container')))
+            if element is not None:
+                get_job_ids()
+                time.sleep(5)
+                next_url = get_next_url()
+                time.sleep(5)
+                driver.get(next_url)
+                time.sleep(10)
+            else:
+                running = False
+        except EndOfJobs:
+            running = False

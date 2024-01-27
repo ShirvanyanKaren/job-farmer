@@ -31,7 +31,7 @@ def json_file_operation(file_name, operation, data=None, index=None):
                 json.dump(data, file)
                 print(f'Appended {len(data)} lines to {file_name}')
         else:
-            print(f'Error: {file_name} not found')
+            print(f'Error: {file_name} not found, creating a new one')
     except json.JSONDecodeError:
         print(f'Error: Invalid JSON format in file: {file_name}')
 

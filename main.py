@@ -2,12 +2,9 @@ from linkedin import *
 
 
 def init(**kwargs):
-    try:
-        login()
-        search_jobs(**kwargs)
-        get_job_ids()
-    except Exception as e:
-        print(f'An error occurred: {e}')
+    login()
+    search_jobs(**kwargs)
+    save_jobs()
 
 
 init(search_key="Web Developer", remote=True, easy_apply=True)
