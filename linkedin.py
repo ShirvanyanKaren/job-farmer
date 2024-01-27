@@ -134,7 +134,7 @@ class EndOfJobs(Exception):
 def get_next_url():
     current_list = read_from_file("job_ids.txt")
     if len(current_list) % 25 == 0:
-        parsed_url = parse_url() + '&start=' + str(len(current_list) + 25)
+        parsed_url = parse_url() + '&start=' + str(len(current_list))
         return parsed_url
     else:
         raise EndOfJobs()
