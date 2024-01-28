@@ -8,6 +8,8 @@ from urllib.parse import urlparse, parse_qs, urlencode, urlunparse
 from fs_operations import write_to_file, read_from_file, delete_from_file
 import time
 import configparser
+import pyttsx4 as tts
+
 
 config = configparser.ConfigParser()
 config.read('config.ini')
@@ -33,8 +35,16 @@ def login():
         driver.find_element(By.ID, "session_password").send_keys(password)
         driver.find_element(By.XPATH, "/html/body/main/section[1]/div/div/form/div[2]/button").click()
         time.sleep(5)
+        tts_count = 0
         while driver.current_url != "https://www.linkedin.com/feed/?trk=homepage-basic_sign-in-submit":
-            time.sleep(1)
+            if tts_count < 2:
+                engine = tts.init()
+                voices = engine.getProperty('voices')
+                engine.setProperty('voice', voices[14].id)
+                engine.say("Please finish the captcha stanley, you booger eater")
+                engine.runAndWait()
+                tts_count += 1
+            time.sleep(3)
     except NoSuchElementException as e:
         print("Some elements were not found:", e)
     except Exception as e:
