@@ -1,5 +1,4 @@
 import inquirer
-from inquirer.themes import GreenPassion
 from inquirer.themes import load_theme_from_dict
 
 dict_theme = {
@@ -19,7 +18,8 @@ dict_theme = {
         "selected_icon": "🤖",
     },
 }
-custom_theme = inquirer.themes.load_theme_from_dict(dict_theme)
+
+custom_theme = load_theme_from_dict(dict_theme)
 
 
 questions = [
