@@ -49,7 +49,7 @@ chardet @ file:///Users/cbousseau/work/recipes/ci_py311/chardet_1677931647221/wo
 charset-normalizer @ file:///tmp/build/80754af9/charset-normalizer_1630003229654/work
 click @ file:///Users/cbousseau/work/recipes/ci_py311/click_1677920889666/work
 cloudpickle @ file:///private/var/folders/nz/j6p8yfhx1mv_0grj5xl4650h0000gp/T/abs_da31odypvn/croot/cloudpickle_1683040013858/work
-clyent==1.2.2
+clyent==1.2.1
 colorama @ file:///Users/cbousseau/work/recipes/ci_py311/colorama_1677925183444/work
 colorcet @ file:///Users/cbousseau/work/recipes/ci_py311/colorcet_1677936559489/work
 comm @ file:///Users/cbousseau/work/recipes/ci_py311/comm_1677919149446/work

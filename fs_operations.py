@@ -1,7 +1,7 @@
 import json
 
 
-def json_file_operation(file_name, operation, data=None, index=None):
+def json_file_operation(file_name, operation, data=None, value=None):
     try:
         if operation == 'read':
             with open(file_name, 'r') as file:
@@ -13,16 +13,17 @@ def json_file_operation(file_name, operation, data=None, index=None):
                 print(f'Appended {len(data)} lines to {file_name}')
 
         elif operation == 'delete':
-            with open(file_name, 'r') as file:
-                data = json.load(file)
-                print(type(data))
-                if index is not None and index < len(data):
-                    data = [item for item in data if item != index]
-                else:
-                    print(f'Error: Index {index} out of range for file: {file_name}')
-            with open(file_name, 'w') as file:
-                json.dump(data, file)
-                print(f'Removed any and all occurrences of value: {index} from file: {file_name}')
+            try:
+                with open(file_name, 'r') as file:
+                    data = json.load(file)
+                    filtered_list = [item for item in data if item != value]
+                    with open(file_name, 'w') as write_file:
+                        json.dump(filtered_list, write_file)
+                        print(f'Removed Job ID: {value} from file: {file_name}')
+            except FileNotFoundError:
+                print(f'Error: File {file_name} not found')
+        else:
+            print(f"Invalid operation: {operation}")
 
     except FileNotFoundError:
         if operation == 'write' and data is not None:
@@ -53,4 +54,4 @@ def read_from_file(file_name):
 
 
 def delete_from_file(value, file_name):
-    json_file_operation(file_name, 'delete', index=value)
+    json_file_operation(file_name, 'delete', value=value)

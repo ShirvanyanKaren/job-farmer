@@ -9,6 +9,7 @@ match = {
         "6": "Executive"
     }
 
+
 def init(**kwargs):
     login()
     search_jobs(**kwargs)

@@ -5,7 +5,7 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
 from urllib.parse import urlparse, parse_qs, urlencode, urlunparse
-from fs_operations import write_to_file, read_from_file
+from fs_operations import write_to_file, read_from_file, delete_from_file
 import time
 import configparser
 
@@ -71,7 +71,7 @@ def search_jobs(**kwargs):
                                 '/html/body/div[4]/div[3]/div[4]/section/div/section/div/div/div/ul/li[8]/div/button').click()
             time.sleep(1)
         if kwargs["experience_level"] is not None:
-            driver.find_element(By.XPATH,'//*[@id="searchFilter_experience"]').click()
+            driver.find_element(By.XPATH, '//*[@id="searchFilter_experience"]').click()
             time.sleep(1)
             for experience_level in kwargs["experience_level"]:
                 driver.find_element(By.XPATH,
@@ -139,6 +139,7 @@ def get_next_url():
     else:
         raise EndOfJobs()
 
+
 def save_jobs(**kwargs):
     jobs_num = kwargs["number_of_jobs"]
     jobs_added = 0
@@ -161,4 +162,18 @@ def save_jobs(**kwargs):
                 running = False
         except EndOfJobs:
             running = False
+
+
+def get_job_posting():
+    login()
+    current_list = read_from_file("job_ids.txt")
+    posting_url = f'https://www.linkedin.com/jobs/search/?currentJobId={current_list[0]}'
+    page_loaded = False
+    while not page_loaded:
+        driver.get(posting_url)
+        if driver.current_url != posting_url:
+            time.sleep(1)
+        else:
+            delete_from_file(current_list[0], 'job_ids.txt')
+            page_loaded = True
 
